@@ -1,4 +1,4 @@
-import {React,useState,useEffect} from "react";
+import {React,useState,useEffect,useCallback} from "react";
 import ReactDOM from "react-dom/client"
 
 function PasswordGenerator(){
@@ -8,7 +8,7 @@ function PasswordGenerator(){
     const [numberChecked,setNumberChanged] = useState(false);
     const [characterChecked,setCharacterChanged] = useState(false);
 
-    function passGenerator(){
+    const passGenerator = useCallback(()=>{
         let str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         if(numberChecked){
             str+="0123456789";
@@ -22,14 +22,16 @@ function PasswordGenerator(){
             pass+= str[Math.floor(Math.random()*str.length)];
         }
         setPassword(pass);
-    }
+    },[numberChecked,characterChecked,length])
+
+
     useEffect(()=>{
         passGenerator();
-    },[numberChecked,characterChecked,length])
+    },[passGenerator])
 
     return (
         <>
-            <h1>Password is {password}</h1>
+            <h1>Password is <br></br>{password}</h1>
             <div>
                 <input type="range" min={5} max={20} value={length} onChange={(e)=>{setLength(e.target.value)}}></input>
                 <label>Length is {length}</label>
